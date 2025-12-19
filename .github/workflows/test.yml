@@ -1,46 +1,14 @@
-name: Comment from comment.txt
+name: PR Target Info
 
 on:
   pull_request_target:
-    types: [opened, synchronize, reopened]
-
-permissions:
-  contents: read
-  pull-requests: write
+    types: [opened, synchronize, reopened, closed]
 
 jobs:
-  comment:
+  print-info:
     runs-on: ubuntu-latest
-
     steps:
-      - name: Checkout PR branch
-        uses: actions/checkout@v4
-        with:
-          ref: ${{ github.event.pull_request.head.sha }}
-
-      - name: Post comment if comment.txt exists
-        uses: actions/github-script@v7
-        with:
-          script: |
-            const fs = require("fs");
-
-            const path = "comment.txt";
-            if (!fs.existsSync(path)) {
-              console.log("comment.txt not found, skipping.");
-              return;
-            }
-
-            const body = fs.readFileSync(path, "utf8").trim();
-            if (!body) {
-              console.log("comment.txt is empty, skipping.");
-              return;
-            }
-
-            await github.rest.issues.createComment({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              issue_number: 2,
-              body
-            });
-
-            console.log("Comment posted.");
+      - name: Print PR event info
+        run: |
+          echo "Event action: ${{ github.event.action }}"
+          echo "GitHub actor: ${{ github.actor }}"

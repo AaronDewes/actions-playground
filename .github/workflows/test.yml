@@ -12,3 +12,4 @@ jobs:
         run: |
           echo "Event action: ${{ github.event.action }}"
           echo "GitHub actor: ${{ github.actor }}"
+          echo "Head ref: ${{ github.head_ref }}"
